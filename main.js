@@ -72,3 +72,76 @@ img.addEventListener('load', () => {
     cx.drawImage(img, x, 10);
   }
 });
+
+// ============================
+let playerCtx = document.getElementById('player').getContext('2d');
+let plyrImg = document.createElement('img');
+plyrImg.src = 'img/player.png';
+
+let spriteW = 24,
+  spriteH = 30;
+
+plyrImg.addEventListener('load', () => {
+  let cycle = 0;
+
+  setInterval(() => {
+    playerCtx.clearRect(0, 0, spriteW, spriteH);
+    playerCtx.drawImage(
+      plyrImg,
+      // source rectangle
+      cycle * spriteW,
+      0,
+      spriteW,
+      spriteH,
+      // destination rectangle
+      0,
+      0,
+      spriteW,
+      spriteH
+    );
+    cycle = (cycle + 1) % 8;
+  }, 120);
+});
+
+// ===========================
+let transCtx = document.getElementById('transform').getContext('2d');
+
+transCtx.scale(3, 0.5);
+transCtx.beginPath();
+transCtx.arc(50, 50, 40, 0, 7);
+transCtx.lineWidth = 3;
+transCtx.stroke();
+
+// ===================
+
+function flipHorizontally(context, around) {
+  context.translate(around, 0);
+  context.scale(-1, 1);
+  context.translate(-around, 0);
+}
+
+let flipCtx = document.getElementById('flip').getContext('2d');
+let plrImg = document.createElement('img');
+plrImg.src = 'img/player.png';
+
+plrImg.addEventListener('load', () => {
+  flipHorizontally(flipCtx, 100 + spriteW / 2);
+  flipCtx.drawImage(plrImg, 0, 0, spriteW, spriteH, 100, 0, spriteW, spriteH);
+});
+
+// ===============================================================
+
+let ct2 = document.getElementById('ct2').getContext('2d');
+function branch(length, angle, scale) {
+  ct2.fillRect(0, 0, 1, length);
+  if (length < 8) return;
+  ct2.save();
+  ct2.translate(0, length);
+  ct2.rotate(-angle);
+  branch(length * scale, angle, scale);
+  ct2.rotate(2 * angle);
+  branch(length * scale, angle, scale);
+  ct2.restore();
+}
+ct2.translate(300, 0);
+branch(60, 0.5, 0.8);
